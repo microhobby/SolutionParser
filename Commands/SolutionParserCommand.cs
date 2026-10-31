@@ -179,7 +179,7 @@ public sealed class SolutionParserCommand : Command<SolutionParserCommand.Settin
             string pattern = @"(\d+\.\d+\.\d+[-\w\.]*)\s+\[(.*)\]";
             var sdkPaths = Regex.Matches(output, pattern)
                 .OfType<Match>()
-                .Where(m => prerelease ? true : (m.Value.IndexOf('-') >= 0 ? false : true))
+                .Where(m => prerelease || !m.Groups[1].Value.Contains('-'))
                 .Select(m => new { Version = m.Groups[1].Value, Path = Path.Combine(m.Groups[2].Value, m.Groups[1].Value, "MSBuild.dll") });
 
             var sdkPath = (sdk == null ? sdkPaths.LastOrDefault() :
